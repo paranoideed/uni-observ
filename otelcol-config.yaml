@@ -18,9 +18,6 @@ exporters:
     tls:
       insecure: true
 
-  loki:
-    endpoint: http://loki:3100/loki/api/v1/push
-
 service:
   pipelines:
     metrics:
@@ -31,7 +28,3 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [otlp/tempo]
-    logs:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [loki]

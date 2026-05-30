@@ -53,6 +53,18 @@ services:
     networks:
       - uni-net
 
+  promtail:
+    image: grafana/promtail:latest
+    container_name: uni-promtail
+    command: -config.file=/etc/promtail/config.yaml
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - uni-net
+    depends_on:
+      - loki
+
   grafana:
     image: grafana/grafana:latest
     container_name: uni-grafana
@@ -61,6 +73,7 @@ services:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
       - grafanadata:/var/lib/grafana
     ports:
       - "${GRAFANA_PORT:-3000}:3000"
